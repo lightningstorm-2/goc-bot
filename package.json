@@ -1,0 +1,21 @@
+{
+  "name": "discord",
+  "version": "1.0.0",
+  "main": "src/bot.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "keywords": [],
+  "author": "Lightning Stormcle",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@discordjs/rest": "^2.4.0",
+    "chalk": "^4.1.2",
+    "discord-api-types": "^0.37.103",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "mongoose": "^8.13.1"
+  }
+}
