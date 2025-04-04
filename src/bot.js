@@ -21,7 +21,7 @@ for (const folder of functionFolders) {
 
 client.handleEvents();
 client.handleCommands();
-client.handleComponents();
+// client.handleComponents();
 client.login(token);
 (async () => {
   await connect(databaseToken).catch(console.error);

@@ -11,7 +11,7 @@ module.exports = {
         .setDescription("The user you'd like to decrease points of.")
         .setRequired(true)
     )
-    .addNumberOption((option) =>
+    .addIntegerOption((option) =>
       option
         .setName("amount")
         .setDescription("The amount of points to decrease.")
@@ -30,7 +30,7 @@ module.exports = {
     }
 
     // Proceed if the user has the role
-    let amount = interaction.options.getNumber("amount");
+    let amount = interaction.options.getInteger("amount");
     const selectedUser = interaction.options.getUser("target");
 
     // Fetch balance
@@ -46,9 +46,6 @@ module.exports = {
         ephemeral: true,
       });
     }
-
-    // Format amount to 2 decimal places
-    amount = Number(amount).toFixed(2);
 
     // Update balance
     await Balance.findOneAndUpdate(
