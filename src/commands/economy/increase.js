@@ -11,7 +11,7 @@ module.exports = {
         .setDescription("The user you'd like to increase points of.")
         .setRequired(true)
     )
-    .addNumberOption((option) =>
+    .addIntegerOption((option) =>
       option
         .setName("amount")
         .setDescription("The amount of points to increase.")
