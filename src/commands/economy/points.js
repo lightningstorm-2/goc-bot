@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("points")
+    .setName("points_balance")
     .setDescription("Returns the points of a user mentioned.")
     .addUserOption((option) =>
       option

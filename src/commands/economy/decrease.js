@@ -3,18 +3,18 @@ const Balance = require("../../schemas/balance");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("add_points")
-    .setDescription("Adds points to the mentioned person.")
+    .setName("points_decrease")
+    .setDescription("Decreases specified points to the mentioned person.")
     .addUserOption((option) =>
       option
         .setName("target")
-        .setDescription("The user you'd like to add points to.")
+        .setDescription("The user you'd like to decrease points of.")
         .setRequired(true)
     )
     .addNumberOption((option) =>
       option
         .setName("amount")
-        .setDescription("The amount of points to give.")
+        .setDescription("The amount of points to decrease.")
         .setRequired(true)
     ),
   async execute(interaction, client) {
@@ -54,13 +54,13 @@ module.exports = {
     await Balance.findOneAndUpdate(
       { _id: selectedUserBalance._id },
       {
-        balance: Number(selectedUserBalance.balance) + Number(amount),
+        balance: Number(selectedUserBalance.balance) - Number(amount),
       }
     );
 
     // Reply to user
     await interaction.reply({
-      content: `You've added ${amount} points to ${selectedUser.username}.`,
+      content: `You've decreased ${amount} points of ${selectedUser.username}.\nNew points: ${Number(selectedUserBalance.balance) - Number(amount)}`,
       ephemeral: false,
     });
   },
