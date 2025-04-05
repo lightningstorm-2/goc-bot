@@ -21,8 +21,14 @@ for (const folder of functionFolders) {
 
 client.handleEvents();
 client.handleCommands();
-// client.handleComponents();
+client.handleComponents();
 client.login(token);
 (async () => {
   await connect(databaseToken).catch(console.error);
 })();
+
+
+setTimeout(() => {
+  console.log("🔁 Restarting bot to reduce memory usage...");
+  process.exit(0); // Railway will auto-restart the app
+}, 12 * 60 * 60 * 1000); // Every 6 hours (in milliseconds)
