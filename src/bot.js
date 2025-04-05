@@ -1,102 +1,120 @@
 require("dotenv").config();
 const { token, databaseToken } = process.env;
-const { connect } = require('mongoose');
+const { connect } = require("mongoose");
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
-const StatusMessage = require('./schemas/statusMessage');
+const StatusMessage = require("./schemas/statusMessage");
 const channelId = "1357987759721287700";
 
-const client = new Client({ intents: GatewayIntentBits.Guilds });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
 client.commands = new Collection();
-client.buttons = new Collection();
-client.selectMenus = new Collection();
 client.commandArray = [];
 
-const functionFolders = fs.readdirSync(`./src/functions`);
+// Load functions
+const functionFolders = fs.readdirSync("./src/functions");
 for (const folder of functionFolders) {
   const functionFiles = fs
     .readdirSync(`./src/functions/${folder}`)
     .filter((file) => file.endsWith(".js"));
-  for (const file of functionFiles)
+  for (const file of functionFiles) {
     require(`./functions/${folder}/${file}`)(client);
+  }
 }
 
-// Bot startup logic
-client.once("ready", async () => {
-  const channel = await client.channels.fetch(channelId);
-  const status = await StatusMessage.findById("statusDoc");
+client.handleEvents();
+client.handleCommands();
 
-  // Delete shutdown message if exists
+client.once("ready", async () => {
+  console.log(`✅ Logged in as ${client.user.tag}`);
+  const status = await StatusMessage.findById("statusDoc").lean();
+  const channel = await client.channels.fetch(channelId).catch(console.error);
+
+  if (!channel) {
+    console.error("❌ Could not fetch channel.");
+    return;
+  }
+
+  // Delete previous shutdown message
   if (status?.shutdownMessageId) {
     try {
-      const shutdownMsg = await channel.messages.fetch(status.shutdownMessageId);
-      await shutdownMsg.delete();
+      const msg = await channel.messages.fetch(status.shutdownMessageId);
+      await msg.delete();
+      console.log("🗑️ Deleted previous shutdown message.");
     } catch (err) {
-      console.log("No shutdown message to delete.");
+      console.warn("⚠️ Could not delete shutdown message:", err.message);
     }
   }
 
-  // Send online message
-  const onlineMsg = await channel.send("✅ Bot is now **online**!");
+  // Delete previous online message
+  if (status?.onlineMessageId) {
+    try {
+      const msg = await channel.messages.fetch(status.onlineMessageId);
+      await msg.delete();
+      console.log("🗑️ Deleted previous online message.");
+    } catch (err) {
+      console.warn("⚠️ Could not delete online message:", err.message);
+    }
+  }
 
-  // Save to DB
+  // Send new online message
+  const newMsg = await channel.send("✅ Bot is now **online**!");
+
   await StatusMessage.findByIdAndUpdate(
     "statusDoc",
     {
       _id: "statusDoc",
-      onlineMessageId: onlineMsg.id,
+      onlineMessageId: newMsg.id,
       shutdownMessageId: null,
-      channelId: channelId,
+      channelId,
     },
     { upsert: true }
   );
 
-  console.log("✅ Bot startup message sent.");
+  console.log("📨 Sent online message and updated DB.");
 });
 
-// Graceful shutdown logic
+// Shutdown handler
 const shutdownHandler = async () => {
+  console.log("⚠️ Preparing for scheduled shutdown...");
   try {
     const status = await StatusMessage.findById("statusDoc");
     if (!status) return process.exit(0);
 
     const channel = await client.channels.fetch(status.channelId);
 
-    // Delete previous online message
+    // Delete last online message
     if (status.onlineMessageId) {
       try {
-        const onlineMsg = await channel.messages.fetch(status.onlineMessageId);
-        await onlineMsg.delete();
+        const msg = await channel.messages.fetch(status.onlineMessageId);
+        await msg.delete();
+        console.log("🗑️ Deleted online message before shutdown.");
       } catch (err) {
-        console.log("No online message to delete.");
+        console.warn("⚠️ Failed to delete online message:", err.message);
       }
     }
 
     // Send shutdown message
-    const shutdownMsg = await channel.send("⚠️ Bot is shutting down for scheduled restart...");
+    const shutdownMsg = await channel.send("🔻 Bot is shutting down...");
 
-    // Save shutdown message ID
     await StatusMessage.findByIdAndUpdate("statusDoc", {
-      onlineMessageId: null,
       shutdownMessageId: shutdownMsg.id,
+      onlineMessageId: null,
     });
 
-    console.log("🛑 Shutdown message sent.");
+    console.log("📨 Sent shutdown message.");
     process.exit(0);
   } catch (err) {
-    console.error("❌ Error during shutdown handler:", err);
+    console.error("❌ Shutdown error:", err);
     process.exit(1);
   }
 };
 
-// Handle shutdown on Railway auto-restart (12 hours)
-setTimeout(shutdownHandler, 12 * 60 * 60 * 1000); // 12 hours
+// Shutdown after 12 hours
+setTimeout(shutdownHandler, 12 * 60 * 60 * 1000);
 
-client.handleEvents();
-client.handleCommands();
-// client.handleComponents();
-
-client.login(token);
+// Connect to MongoDB and login
 (async () => {
   await connect(databaseToken).catch(console.error);
+  client.login(token);
 })();
