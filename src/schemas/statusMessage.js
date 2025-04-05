@@ -1,8 +1,10 @@
-const statusSchema = new mongoose.Schema({
-    _id: { type: String, default: "statusDoc" },
-    onlineMessageId: String,
-    shutdownMessageId: String,
-    channelId: String,
-  });
-  
-  module.exports = mongoose.model("StatusMessage", statusSchema);
+const { Schema, model } = require("mongoose");
+
+const statusSchema = new Schema({
+  _id: { type: String, default: "statusDoc" },
+  onlineMessageId: String,
+  shutdownMessageId: String,
+  channelId: String,
+});
+
+module.exports = model("StatusMessage", statusSchema);
