@@ -1,7 +1,7 @@
 require("dotenv").config();
 const { token, databaseToken } = process.env;
 const { connect } = require("mongoose");
-const { Client, Collection, GatewayIntentBits } = require("discord.js");
+const { Client, Collection, GatewayIntentBits, EmbedBuilder } = require("discord.js");
 const fs = require("fs");
 const StatusMessage = require("./schemas/statusMessage");
 const channelId = "1357987759721287700";
@@ -27,23 +27,13 @@ client.handleCommands();
 
 client.once("ready", async () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
+
   const status = await StatusMessage.findById("statusDoc").lean();
   const channel = await client.channels.fetch(channelId).catch(console.error);
 
   if (!channel) {
     console.error("❌ Could not fetch channel.");
     return;
-  }
-
-  // Delete previous shutdown message
-  if (status?.shutdownMessageId) {
-    try {
-      const msg = await channel.messages.fetch(status.shutdownMessageId);
-      await msg.delete();
-      console.log("🗑️ Deleted previous shutdown message.");
-    } catch (err) {
-      console.warn("⚠️ Could not delete shutdown message:", err.message);
-    }
   }
 
   // Delete previous online message
@@ -57,15 +47,34 @@ client.once("ready", async () => {
     }
   }
 
-  // Send new online message
-  const newMsg = await channel.send("✅ Bot is now **online**!");
+  // Create an embed message
+  const now = new Date();
+  const formattedTime = now.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  const formattedDate = now.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const embed = new EmbedBuilder()
+    .setTitle("🟢 Bot Online")
+    .setDescription(`> **The Engine** is now online as of:\n📅 ${formattedDate}\n⏰ ${formattedTime}`)
+    .setColor("Green")
+    .setThumbnail(client.user.displayAvatarURL())
+    .setFooter({ text: "Status update", iconURL: client.user.displayAvatarURL() });
+
+  const newMsg = await channel.send({ embeds: [embed] });
 
   await StatusMessage.findByIdAndUpdate(
     "statusDoc",
     {
       _id: "statusDoc",
       onlineMessageId: newMsg.id,
-      shutdownMessageId: null,
       channelId,
     },
     { upsert: true }
@@ -74,7 +83,7 @@ client.once("ready", async () => {
   console.log("📨 Sent online message and updated DB.");
 });
 
-// Shutdown handler
+// Graceful shutdown (deletes online message before exit)
 const shutdownHandler = async () => {
   console.log("⚠️ Preparing for scheduled shutdown...");
   try {
@@ -94,15 +103,10 @@ const shutdownHandler = async () => {
       }
     }
 
-    // Send shutdown message
-    const shutdownMsg = await channel.send("🔻 Bot is shutting down...");
-
     await StatusMessage.findByIdAndUpdate("statusDoc", {
-      shutdownMessageId: shutdownMsg.id,
       onlineMessageId: null,
     });
 
-    console.log("📨 Sent shutdown message.");
     process.exit(0);
   } catch (err) {
     console.error("❌ Shutdown error:", err);
@@ -113,11 +117,10 @@ const shutdownHandler = async () => {
 // Shutdown after 12 hours
 setTimeout(() => {
   console.log("🔁 Restarting bot to reduce memory usage...");
-  throw new Error("Intentional crash after 12h to trigger Railway restart");
+  shutdownHandler();
 }, 12 * 60 * 60 * 1000); // 12 hours
 
-
-// Connect to MongoDB and login
+// MongoDB and login
 (async () => {
   await connect(databaseToken).catch(console.error);
   client.login(token);

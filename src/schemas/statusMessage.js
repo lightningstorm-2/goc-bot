@@ -1,10 +1,9 @@
-const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
-const statusSchema = new Schema({
+const statusMessageSchema = new mongoose.Schema({
   _id: { type: String, default: "statusDoc" },
-  onlineMessageId: String,
-  shutdownMessageId: String,
-  channelId: String,
+  onlineMessageId: { type: String, default: null },
+  channelId: { type: String, required: true }
 });
 
-module.exports = model("StatusMessage", statusSchema);
+module.exports = mongoose.model("StatusMessage", statusMessageSchema);
