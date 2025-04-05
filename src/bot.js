@@ -49,21 +49,11 @@ client.once("ready", async () => {
 
   // Create an embed message
   const now = new Date();
-  const formattedTime = now.toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-  const formattedDate = now.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
+  const timestamp = `<t:${Math.floor(now.getTime() / 1000)}:F>`; // Discord timestamp (Full format)
+  
   const embed = new EmbedBuilder()
-    .setTitle("🟢 Bot Online")
-    .setDescription(`> **The Engine** is now online as of:\n📅 ${formattedDate}\n⏰ ${formattedTime}`)
+    .setTitle("Bot Online")
+    .setDescription(`> Bot is now online as of:\n${timestamp}`)
     .setColor("Green")
     .setThumbnail(client.user.displayAvatarURL())
     .setFooter({ text: "Status update", iconURL: client.user.displayAvatarURL() });
