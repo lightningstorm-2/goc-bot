@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
-const StatusMessage = require("../../../schemas/statusMessage");
+const StatusMessage = require("../../schemas/statusMessage");
 
 module.exports = {
   data: new SlashCommandBuilder()
