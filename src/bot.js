@@ -111,7 +111,11 @@ const shutdownHandler = async () => {
 };
 
 // Shutdown after 12 hours
-setTimeout(shutdownHandler, 12 * 60 * 60 * 1000);
+setTimeout(() => {
+  console.log("🔁 Restarting bot to reduce memory usage...");
+  throw new Error("Intentional crash after 12h to trigger Railway restart");
+}, 12 * 60 * 60 * 1000); // 12 hours
+
 
 // Connect to MongoDB and login
 (async () => {

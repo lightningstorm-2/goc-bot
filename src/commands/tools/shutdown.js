@@ -4,13 +4,14 @@ const StatusMessage = require("../../schemas/statusMessage");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("shutdown")
-    .setDescription("Restarts the bot.")
+    .setDescription("Forces the bot to shutdown and restart on Railway.")
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages),
+  
   async execute(interaction, client) {
     const allowedRoleId = "1351470675013013574";
     const member = interaction.member;
 
-    // Check role OR admin permission
+    // Check if user has the allowed role or admin perms
     const hasAccess =
       member.roles.cache.has(allowedRoleId) ||
       member.permissions.has(PermissionFlagsBits.Administrator);
@@ -23,28 +24,19 @@ module.exports = {
     }
 
     await interaction.reply({
-      content: "Simulating bot shutdown...",
+      content: "🔻 Simulating bot shutdown and restart...",
       ephemeral: true,
     });
 
     try {
       const status = await StatusMessage.findById("statusDoc");
-      if (!status) return process.exit(0);
-
-      const channel = await client.channels.fetch(status.channelId);
-
-      // Delete last online message
-      if (status.onlineMessageId) {
-        try {
-          const msg = await channel.messages.fetch(status.onlineMessageId);
-          await msg.delete();
-          console.log("🗑️ Deleted online message before shutdown.");
-        } catch (err) {
-          console.warn("⚠️ Failed to delete online message:", err.message);
-        }
+      if (status && status.onlineMessageId) {
+        const channel = await client.channels.fetch(status.channelId);
+        const msg = await channel.messages.fetch(status.onlineMessageId).catch(() => null);
+        if (msg) await msg.delete().catch(() => {});
       }
 
-      // Send shutdown message
+      const channel = await client.channels.fetch(status.channelId);
       const shutdownMsg = await channel.send("🔻 Bot is shutting down...");
 
       await StatusMessage.findByIdAndUpdate("statusDoc", {
@@ -53,10 +45,15 @@ module.exports = {
       });
 
       console.log("📨 Sent shutdown message.");
-      process.exit(0);
+      console.log("❗ Crashing intentionally to trigger Railway restart...");
+
+      // ❌ Crash on purpose to force Railway restart
+      throw new Error("Intentional crash for Railway auto-restart");
+
     } catch (err) {
-      console.error("❌ Error during shutdown-test:", err);
-      process.exit(1);
+      console.error("⚠️ Shutdown-test error:", err);
+      // Still crash intentionally if inside catch
+      throw new Error("Forced Railway restart from shutdown-test");
     }
   },
 };
