@@ -30,7 +30,7 @@ module.exports = (client) => {
       },
       {
         type: ActivityType.Watching,
-        text: "over PLOTEMY",
+        text: "over PTOLEMY",
         status: "online",
       },
       {

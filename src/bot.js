@@ -6,7 +6,16 @@ const fs = require("fs");
 const StatusMessage = require("./schemas/statusMessage");
 const channelId = "1357987759721287700";
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages,
+  ],
+  partials: ['CHANNEL'], // Needed to handle DMs
+});
+  
 
 client.commands = new Collection();
 client.commandArray = [];
@@ -23,6 +32,7 @@ for (const folder of functionFolders) {
 }
 
 client.handleEvents();
+client.handleComponents( )
 client.handleCommands();
 
 client.once("ready", async () => {

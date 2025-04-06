@@ -1,60 +1,54 @@
 module.exports = {
   name: "interactionCreate",
   async execute(interaction, client) {
-    if (interaction.isChatInputCommand()) {
-      const { commands } = client;
-      const { commandName } = interaction;
-      const command = commands.get(commandName);
-      if (!command) return;
+    const { commands, buttons, selectMenus } = client;
 
-      try {
+    try {
+      // Slash Commands
+      if (interaction.isChatInputCommand()) {
+        const command = commands.get(interaction.commandName);
+        if (!command) return;
+
         await command.execute(interaction, client);
-      } catch (error) {
-        console.error(error);
-        await interaction.reply({
-          content: `Something went wrong while executing this command...`,
-          ephemeral: true,
-        });
       }
-    } else if (interaction.isButton()) {
-      const { buttons } = client;
-      const { customId } = interaction;
-      const button = buttons.get(customId);
-      if (!button) return new Error('There is no code for this button.');
+
+      // Buttons with dynamic customId (e.g., accept_app_USERID)
+      else if (interaction.isButton()) {
+        const customId = interaction.customId;
+
+        // Find matching button by prefix
+        const buttonKey = Array.from(buttons.keys()).find((key) =>
+          customId.startsWith(key)
+        );
+        const button = buttons.get(customId) || [...buttons.values()].find(btn => customId.startsWith(btn.data.name));
 
 
-      try {
+        if (!button) {
+          console.warn(`❌ No button handler found for: ${customId}`);
+          return;
+        }
+
         await button.execute(interaction, client);
-      } catch (err) {
-        console.error(err);
       }
-    } else if (interaction.isButton() && interaction.isChatInputCommand()) {
-      const { commands } = client;
-      const { commandName } = interaction;
-      const command = commands.get(commandName);
-      const { buttons } = client;
-      const { customId } = interaction;
-      const button = buttons.get(customId);
 
-      if (!command) return;
-      if (!button) return new Error('There is no code for this button.');
+      // Select Menus
+      else if (interaction.isSelectMenu()) {
+        const menu = selectMenus.get(interaction.customId);
+        if (!menu) {
+          console.warn(`❌ No select menu handler found for: ${interaction.customId}`);
+          return;
+        }
 
-      try {
-        await button.execute(interaction, client);
-      } catch (err) {
-        console.error(err);
-      }
-    } else if (interaction.isSelectMenu()) {
-      const { selectMenus } = client;
-      const { customId } = interaction;
-      const menu = selectMenus.get(customId);
-      if (!menu) return new Error("There is no code for this select menu.");
-
-      try {
-        
         await menu.execute(interaction, client);
-      } catch (error) {
-        console.error(error);
+      }
+
+    } catch (error) {
+      console.error("❌ Error in interactionCreate:", error);
+
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({ content: "⚠️ Something went wrong.", ephemeral: true });
+      } else {
+        await interaction.reply({ content: "⚠️ Something went wrong.", ephemeral: true });
       }
     }
   },
