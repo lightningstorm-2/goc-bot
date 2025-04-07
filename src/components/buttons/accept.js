@@ -7,7 +7,7 @@ const PASSED_ROLE = "989415204133683200";
 
 module.exports = {
   data: {
-    name: "accept_app", // this must match the prefix of your customId
+    name: "accept_app",
   },
   async execute(interaction, client) {
     const userId = interaction.customId.split("_")[2];
@@ -25,7 +25,13 @@ module.exports = {
       await member.roles.remove(APPLICATION_ROLE);
       await member.roles.add(PASSED_ROLE);
 
-      await interaction.update({
+      // Defer update first
+      if (!interaction.deferred && !interaction.replied) {
+        await interaction.deferUpdate();
+      }
+
+      // Edit the message after deferring
+      await interaction.editReply({
         embeds: [
           EmbedBuilder.from(interaction.message.embeds[0]).setColor("Green").setFooter({
             text: `✅ Accepted by ${interaction.user.tag}`,

@@ -5,14 +5,19 @@ const APPLICATION_ROLE = "1356706851281965136";
 
 module.exports = {
   data: {
-    name: "deny_app", // Must match the prefix of your button customId
+    name: "deny_app",
   },
   async execute(interaction, client) {
     const userId = interaction.customId.split("_")[2];
 
     try {
-      // Edit the embed to reflect the denied status
-      await interaction.update({
+      // Defer interaction before editing
+      if (!interaction.deferred && !interaction.replied) {
+        await interaction.deferUpdate();
+      }
+
+      // Edit the message with denied embed
+      await interaction.editReply({
         embeds: [
           EmbedBuilder.from(interaction.message.embeds[0])
             .setColor("Red")
@@ -26,7 +31,7 @@ module.exports = {
 
       await Application.findOneAndDelete({ userId });
 
-      // Attempt to notify the user via DM
+      // Try to DM the user
       const user = await client.users.fetch(userId).catch(() => null);
       if (user) {
         await user.send("❌ Your application has been denied.").catch(() => {});
