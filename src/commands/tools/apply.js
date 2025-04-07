@@ -96,11 +96,17 @@ module.exports = {
 
     collector.on("collect", async (msg) => {
       const currentQ = questions[currentIndex];
+      if (!currentQ) {
+        console.error("❌ Reached invalid question index:", currentIndex);
+        collector.stop();
+        return;
+      }
+    
       responses[currentQ.key] = msg.content;
       currentIndex++;
       await askNextQuestion();
     });
-
+    
     collector.on("end", async (collected, reason) => {
       if (reason === "time" && currentIndex < questions.length) {
         await dmChannel.send("⏰ You took too long. Application canceled.");
