@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/bot.js",
   "scripts": {
-    "test": "node ."
+    "main": "node ."
   },
   "keywords": [],
   "author": "Lightning Stormcle",
