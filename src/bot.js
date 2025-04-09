@@ -32,7 +32,7 @@ for (const folder of functionFolders) {
 }
 
 client.handleEvents();
-client.handleComponents( )
+// client.handleComponents( )
 client.handleCommands();
 
 client.once("ready", async () => {
