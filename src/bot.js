@@ -114,11 +114,6 @@ const shutdownHandler = async () => {
   }
 };
 
-// Shutdown after 12 hours
-setTimeout(() => {
-  console.log("🔁 Restarting bot to reduce memory usage...");
-  shutdownHandler();
-}, 12 * 60 * 60 * 1000); // 12 hours
 
 // MongoDB and login
 (async () => {
