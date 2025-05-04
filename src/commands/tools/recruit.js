@@ -20,7 +20,7 @@ module.exports = {
 
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: false });
-    const allowedRoles = ["1331284913395077170", "1213603754595852358"];
+    const allowedRoles = ["1331284913395077170", "1213603754595852358", "1183473286856847390", "1179524589592784996"];
     const member = interaction.member;
 
     const hasAccess = allowedRoles.some((roleId) =>
