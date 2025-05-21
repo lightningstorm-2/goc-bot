@@ -65,7 +65,7 @@ module.exports = {
     }
 
     const dmEmbed = new EmbedBuilder()
-      .setTitle("<:GOC:1225107670130753707> | ɪɴᴛʀᴏᴅᴜᴄᴛɪᴏɴ")
+      .setTitle("<:goc:1121647416639242310> | ɪɴᴛʀᴏᴅᴜᴄᴛɪᴏɴ")
       .setColor("#589FFF")
       .setDescription(
         `
@@ -81,7 +81,7 @@ module.exports = {
         {
           name: "𝚁𝚎𝚜𝚘𝚞𝚛𝚌𝚎𝚜",
           value:
-            "The following channels will guide you through your setup:\n- [**Documentation <:book1:1356702966362407048>**](https://discord.com/channels/944748036419108875/1127153205734809720) to read through our handbooks for further information.\n- **[Codename Request](https://discord.com/channels/944748036419108875/1147571213649059983)** to request your codename. Follow the format and choose a serious one.\n- **[Trial Morph](https://discord.com/channels/944748036419108875/1371046421788233818)** contains the morph template and lockers. Officers will guide you if it needs fixing.\n- **[Deployments](https://discord.com/channels/944748036419108875/989416631170138142)**, **[Trainings](https://discord.com/channels/944748036419108875/1315412870518935583)** and **[Gamenights](https://discord.com/channels/944748036419108875/989419936063565887)** for you to attend.\n- **[Tryouts](https://discord.com/channels/944748036419108875/1193660145130020864)** if you wish to try your luck in joining one of our available divisions.",
+            "The following channels will guide you through your setup:\n- [**Documentation 📖**](https://discord.com/channels/944748036419108875/1127153205734809720) to read through our handbooks for further information.\n- **[Codename Request](https://discord.com/channels/944748036419108875/1147571213649059983)** to request your codename. Follow the format and choose a serious one.\n- **[Trial Morph](https://discord.com/channels/944748036419108875/1371046421788233818)** contains the morph template and lockers. Officers will guide you if it needs fixing.\n- **[Deployments](https://discord.com/channels/944748036419108875/989416631170138142)**, **[Trainings](https://discord.com/channels/944748036419108875/1315412870518935583)** and **[Gamenights](https://discord.com/channels/944748036419108875/989419936063565887)** for you to attend.\n- **[Tryouts](https://discord.com/channels/944748036419108875/1193660145130020864)** if you wish to try your luck in joining one of our available divisions.",
         },
         {
           name: "𝚂𝚒𝚝𝚎𝚜",
