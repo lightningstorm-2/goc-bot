@@ -2,6 +2,9 @@ const {
   SlashCommandBuilder,
   EmbedBuilder,
   PermissionFlagsBits,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 
 module.exports = {
@@ -20,7 +23,12 @@ module.exports = {
 
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: false });
-    const allowedRoles = ["1331284913395077170", "1213603754595852358", "1183473286856847390", "1179524589592784996"];
+    const allowedRoles = [
+      "1331284913395077170",
+      "1213603754595852358",
+      "1183473286856847390",
+      "1179524589592784996",
+    ];
     const member = interaction.member;
 
     const hasAccess = allowedRoles.some((roleId) =>
@@ -41,7 +49,7 @@ module.exports = {
 
     const rolesToAdd = [
       "989415158549995540",
-      "989415204133683200",
+      "1366827323642351727",
       "1183471903172743198",
     ];
     const roleToRemove = "989415105093591080";
@@ -57,37 +65,100 @@ module.exports = {
     }
 
     const dmEmbed = new EmbedBuilder()
-      .setTitle("Welcome to Global Occult Coalition!")
-      .setColor("Blue")
+      .setTitle("<:GOC:1225107670130753707> | ɪɴᴛʀᴏᴅᴜᴄᴛɪᴏɴ")
+      .setColor("#589FFF")
       .setDescription(
         `
-      Please refer to the following:
-      [Join our Roblox Group](https://www.roblox.com/groups/13967152/GOC-Global-Occult-Coalition-GOC#!/s)
-      <#1127153205734809720> — Important handbooks, please read.
-      <#1147571213649059983> — Request your codename (follow the format).
-      <#1144476467967823903> — Morph templates and regulations.
-      <#1127391861758234636> — Store morphs for deployments/events.
-      <#1216231256304390195> — Request rank in the Roblox group.
-      <#1110780853027602482> — Log self-deployments (follow the format).
-      <#1129986180432281641> — Request promotion after enough points.
-      <#1130010738338037790> — Ask questions here, staff will assist.
-      
-      If you have any other concerns, feel free to DM a Command Staff member.
-      Have a good day!
+      <:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>
           `
       )
-      .setFooter({
-        text: "Global Occult Coalition",
-        iconURL: interaction.client.user.displayAvatarURL(),
-      });
+      .setFields(
+        {
+          name: "𝚁𝚎𝚚𝚞𝚒𝚛𝚎𝚖𝚎𝚗𝚝𝚜",
+          value:
+            "- As a Trial Operative, you will have limited access to certain events and features until you complete the requirements to become a **Basic Operative.**\n- Attend **[2/2]** deployments under supervision and pass the Aptitude Test to be promoted and begin your journey in the **Global Occult Coalition.**",
+        },
+        {
+          name: "𝚁𝚎𝚜𝚘𝚞𝚛𝚌𝚎𝚜",
+          value:
+            "The following channels will guide you through your setup:\n- [**Documentation <:book1:1356702966362407048>**](https://discord.com/channels/944748036419108875/1127153205734809720) to read through our handbooks for further information.\n- **[Codename Request](https://discord.com/channels/944748036419108875/1147571213649059983)** to request your codename. Follow the format and choose a serious one.\n- **[Trial Morph](https://discord.com/channels/944748036419108875/1371046421788233818)** contains the morph template and lockers. Officers will guide you if it needs fixing.\n- **[Deployments](https://discord.com/channels/944748036419108875/989416631170138142)**, **[Trainings](https://discord.com/channels/944748036419108875/1315412870518935583)** and **[Gamenights](https://discord.com/channels/944748036419108875/989419936063565887)** for you to attend.\n- **[Tryouts](https://discord.com/channels/944748036419108875/1193660145130020864)** if you wish to try your luck in joining one of our available divisions.",
+        },
+        {
+          name: "𝚂𝚒𝚝𝚎𝚜",
+          value:
+            "We are currently operational on four sites:\n- **Site-45**\n- **Site-64**\n- **Site-73**\n- **Site-56**\nUnderstand their regulations are very different from each other. It's recommended to get yourself familiarized with their own handbooks.",
+        },
+        {
+          name: "𝚆𝚑𝚊𝚝 𝚗𝚘𝚠?",
+          value:
+            "As soon as you get your codename and morph approved, you're free to attend events and climb your way to Basic Operative.\n\n- *If you have any questions, feel free to ask Command Staff. Good luck!*",
+        }
+      );
+
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setLabel("Join our Roblox Group")
+        .setStyle(ButtonStyle.Link)
+        .setURL(
+          "https://www.roblox.com/communities/13967152/GOC-Global-Occult-Coalition-GOC#!/about"
+        )
+        .setEmoji("<:RobloxLogo:1374665973851750441>"),
+      new ButtonBuilder()
+        .setLabel("Join our Alliance Hub (Council of 108)")
+        .setStyle(ButtonStyle.Link)
+        .setURL("https://discord.gg/EhXWCmuWsY")
+        .setEmoji("<:C108:1373940048881254502>"),
+      new ButtonBuilder()
+        .setLabel("Join our Foreign Embassy | Appeals Server")
+        .setStyle(ButtonStyle.Link)
+        .setURL("https://discord.gg/HnktGuvB2d")
+        .setEmoji("<:PSYCHE:1295921161925820516>")
+    );
 
     try {
-      await target.send({ embeds: [dmEmbed] });
+      await target.send({ embeds: [dmEmbed], components: [row] });
     } catch {
       await interaction.editReply({
         content: "⚠️ Couldn't send a DM to the user.",
       });
       return;
+    }
+    const targetGuildId = "1142991341811408948";
+    const targetChannelId = "1374713476077064222";
+    try {
+      const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
+      if (targetGuild) {
+        const channel = targetGuild.channels.cache.get(targetChannelId);
+        if (channel && channel.isTextBased()) {
+          const now = Math.floor(Date.now() / 1000); // UNIX timestamp
+
+          const recruitEmbed = new EmbedBuilder()
+            .setTitle("📢 Recruitment Log")
+            .addFields(
+              {
+                name: "Recruiter",
+                value: `${interaction.user.tag}`,
+                inline: true,
+              },
+              {
+                name: "Recruited Member",
+                value: `${target.user.tag}`,
+                inline: true,
+              },
+              { name: "Time", value: `<t:${now}:F>`, inline: false }
+            )
+            .setColor(0x00aeff)
+            .setTimestamp();
+
+          await channel.send({ embeds: [recruitEmbed] });
+        } else {
+          console.warn("⚠️ Could not find text channel in the target guild.");
+        }
+      } else {
+        console.warn("⚠️ Could not find the target guild.");
+      }
+    } catch (err) {
+      console.error("❌ Failed to send message in other guild:", err);
     }
 
     await interaction.editReply({
