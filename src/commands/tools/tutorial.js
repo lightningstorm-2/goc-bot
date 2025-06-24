@@ -9,14 +9,14 @@ const {
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("recruit")
+    .setName("tutorial")
     .setDescription(
-      "Recruit a new member by assigning roles and sending onboarding info."
+      "DMs the specified user a tutorial video for Trial Operative."
     )
     .addUserOption((option) =>
       option
         .setName("user")
-        .setDescription("The user to recruit")
+        .setDescription("The user to DM")
         .setRequired(true)
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
@@ -25,9 +25,9 @@ module.exports = {
     await interaction.deferReply({ ephemeral: false });
     const allowedRoles = [
       "1331284913395077170",
-      "1213603754595852358",
       "1183473286856847390",
-      "1179524589592784996",
+      "1213603754595852358",
+      "1238919314564841592",
     ];
     const member = interaction.member;
 
@@ -47,21 +47,6 @@ module.exports = {
       });
     }
 
-    const rolesToAdd = [
-      "989415158549995540",
-      "1366827323642351727",
-    ];
-    const roleToRemove = "989415105093591080";
-
-    try {
-      await target.roles.add(rolesToAdd);
-      await target.roles.remove(roleToRemove);
-    } catch (err) {
-      console.error("❌ Role modification error:", err);
-      return interaction.editReply({
-        content: "⚠️ Failed to modify roles for the target user.",
-      });
-    }
 
     const dmEmbed = new EmbedBuilder()
       .setTitle("<:goc:1121647416639242310> | ɪɴᴛʀᴏᴅᴜᴄᴛɪᴏɴ")
@@ -115,53 +100,21 @@ module.exports = {
     );
 
     try {
-      await target.send({ embeds: [dmEmbed], components: [row] });
+      await target.send({
+        content: `https://cdn.discordapp.com/attachments/1217145904210116770/1387028480503578675/Untitled_video_-_Made_with_Clipchamp_6.mp4?ex=685bda6f&is=685a88ef&hm=aa5240eee7b0a398a3e3e4d8103d52273b9424e0179ac35e6c47e37994e77d5e&`
+      });
     } catch {
       await interaction.editReply({
         content: "⚠️ Couldn't send a DM to the user.",
       });
       return;
     }
-    const targetGuildId = "1142991341811408948";
-    const targetChannelId = "1374713476077064222";
-    try {
-      const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
-      if (targetGuild) {
-        const channel = targetGuild.channels.cache.get(targetChannelId);
-        if (channel && channel.isTextBased()) {
-          const now = Math.floor(Date.now() / 1000); // UNIX timestamp
 
-          const recruitEmbed = new EmbedBuilder()
-            .setTitle("📢 Recruitment Log")
-            .addFields(
-              {
-                name: "Recruiter",
-                value: `${interaction.user.tag}`,
-                inline: true,
-              },
-              {
-                name: "Recruited Member",
-                value: `${target.user.tag}`,
-                inline: true,
-              },
-              { name: "Time", value: `<t:${now}:F>`, inline: false }
-            )
-            .setColor(0x00aeff)
-            .setTimestamp();
 
-          await channel.send({ embeds: [recruitEmbed] });
-        } else {
-          console.warn("⚠️ Could not find text channel in the target guild.");
-        }
-      } else {
-        console.warn("⚠️ Could not find the target guild.");
-      }
-    } catch (err) {
-      console.error("❌ Failed to send message in other guild:", err);
-    }
+
 
     await interaction.editReply({
-      content: `✅ Successfully recruited ${target.user.tag}.`,
+      content: `✅ Successfully DMed the tutorial to ${target.user.tag}.`,
     });
   },
 };
