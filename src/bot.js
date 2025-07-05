@@ -13,14 +13,13 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.DirectMessages,
   ],
-  partials: ['CHANNEL'], // Needed to handle DMs
+  partials: ['CHANNEL'],
 });
   
 
 client.commands = new Collection();
 client.commandArray = [];
 
-// Load functions
 const functionFolders = fs.readdirSync("./src/functions");
 for (const folder of functionFolders) {
   const functionFiles = fs
@@ -83,7 +82,6 @@ client.once("ready", async () => {
   console.log("📨 Sent online message and updated DB.");
 });
 
-// Graceful shutdown (deletes online message before exit)
 const shutdownHandler = async () => {
   console.log("⚠️ Preparing for scheduled shutdown...");
   try {
@@ -92,7 +90,6 @@ const shutdownHandler = async () => {
 
     const channel = await client.channels.fetch(status.channelId);
 
-    // Delete last online message
     if (status.onlineMessageId) {
       try {
         const msg = await channel.messages.fetch(status.onlineMessageId);
@@ -115,7 +112,6 @@ const shutdownHandler = async () => {
 };
 
 
-// MongoDB and login
 (async () => {
   await connect(databaseToken).catch(console.error);
   client.login(token);
