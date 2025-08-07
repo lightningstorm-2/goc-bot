@@ -68,7 +68,7 @@ module.exports = {
       .setColor("#589FFF")
       .setDescription(
         `
-      <:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>
+        
           `
       )
       .setFields(
@@ -85,7 +85,7 @@ module.exports = {
         {
           name: "𝚂𝚒𝚝𝚎𝚜",
           value:
-            "We are currently operational on four sites:\n- **Site-45**\n- **Site-64**\n- **Site-73**\n- **Site-56**\nUnderstand their regulations are very different from each other. It's recommended to get yourself familiarized with their own handbooks.",
+            "We are currently operational on three sites:\n- **Site-Virtus**\n- **Site-64** \n- **Site-73**\n- **Site-56**\nUnderstand their regulations are very different from each other. It's recommended to get yourself familiarized with their own handbooks.",
         },
         {
           name: "𝚆𝚑𝚊𝚝 𝚗𝚘𝚠?",
