@@ -47,19 +47,16 @@ module.exports = {
       });
     }
 
-    const rolesToAdd = [
-      "1213603754595852358",
-      "1349692317174599702",
-      "1335749823143346329",
-    ];
-    const roleToRemove = [
-      "1183472732055289876",
-      "1183471903172743198",
-    ];
+    const Rmember = interaction.guild.members.cache.get(target.id);
 
     try {
-      await target.roles.add(rolesToAdd);
-      await target.roles.remove(roleToRemove);
+      if (!Rmember.roles.cache.has('1213603754595852358')) await member.roles.add('1213603754595852358'); 
+      if (!Rmember.roles.cache.has('1349692317174599702')) await member.roles.add('1349692317174599702'); 
+      if (!Rmember.roles.cache.has('1335749823143346329')) await member.roles.add('1335749823143346329'); 
+
+      if (Rmember.roles.cache.has('1183472732055289876')) await member.roles.remove('1183472732055289876'); 
+      if (Rmember.roles.cache.has('1183471903172743198')) await member.roles.remove('1183471903172743198'); 
+
     } catch (err) {
       console.error("❌ Role modification error:", err);
       return interaction.editReply({
