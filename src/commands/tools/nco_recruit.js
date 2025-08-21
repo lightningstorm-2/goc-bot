@@ -50,12 +50,12 @@ module.exports = {
     const Rmember = interaction.guild.members.cache.get(target.id);
 
     try {
-      if (!Rmember.roles.cache.has('1213603754595852358')) await member.roles.add('1213603754595852358'); 
-      if (!Rmember.roles.cache.has('1349692317174599702')) await member.roles.add('1349692317174599702'); 
-      if (!Rmember.roles.cache.has('1335749823143346329')) await member.roles.add('1335749823143346329'); 
+      if (!Rmember.roles.cache.has('1213603754595852358')) await Rmember.roles.add('1213603754595852358'); 
+      if (!Rmember.roles.cache.has('1349692317174599702')) await Rmember.roles.add('1349692317174599702'); 
+      if (!Rmember.roles.cache.has('1335749823143346329')) await Rmember.roles.add('1335749823143346329'); 
 
-      if (Rmember.roles.cache.has('1183472732055289876')) await member.roles.remove('1183472732055289876'); 
-      if (Rmember.roles.cache.has('1183471903172743198')) await member.roles.remove('1183471903172743198'); 
+      if (Rmember.roles.cache.has('1183472732055289876')) await Rmember.roles.remove('1183472732055289876'); 
+      if (Rmember.roles.cache.has('1183471903172743198')) await Rmember.roles.remove('1183471903172743198'); 
 
     } catch (err) {
       console.error("❌ Role modification error:", err);
