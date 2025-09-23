@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const Balance = require("../../schemas/balance");
 
 module.exports = {
@@ -55,6 +55,32 @@ module.exports = {
       }
     );
 
+    const targetGuildId = "944748036419108875";
+    const targetChannelId = "1420026487129636945";
+    try {
+      const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
+      if (targetGuild) {
+        const channel = targetGuild.channels.cache.get(targetChannelId);
+        if (channel && channel.isTextBased()) {
+          const timestamp = Date.now()
+
+          const pointsEmbed = new EmbedBuilder()
+            .setTitle("Points Increase Log")
+            .setDescription(`Points of <@${selectedUser.id}> has been increased by ${Number(amount)}.\nPoints increased by <@${interaction.member.id}>.\nNew points: ${Number(selectedUserBalance.balance) + Number(amount)}`)
+            .setColor("#1FF200")
+            .setTimestamp(timestamp);
+
+          await channel.send({ embeds: [pointsEmbed] });
+        } else {
+          console.warn("⚠️ Could not find text channel in the this guild.");
+        }
+      } else {
+        console.warn("⚠️ Could not find the guild.");
+      }
+    } catch (err) {
+      console.error("❌ Failed to send message in the guild:", err);
+    }
+    
     // Reply to user
     await interaction.reply({
       content: `You've added ${amount} points to ${selectedUser.username}.\nNew points: ${Number(selectedUserBalance.balance) + Number(amount)}`,

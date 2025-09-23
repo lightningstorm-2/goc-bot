@@ -124,6 +124,7 @@ module.exports = {
     }
     const targetGuildId = "1142991341811408948";
     const targetChannelId = "1374713476077064222";
+    const timestamp = Date.now()
     try {
       const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
       if (targetGuild) {
@@ -143,11 +144,10 @@ module.exports = {
                 name: "Recruited Member",
                 value: `${target.user.tag}`,
                 inline: true,
-              },
-              { name: "Time", value: `<t:${now}:F>`, inline: false }
+              }
             )
             .setColor(0x00aeff)
-            .setTimestamp();
+            .setTimestamp(timestamp);
 
           await channel.send({ embeds: [recruitEmbed] });
         } else {

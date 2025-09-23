@@ -1,21 +1,15 @@
-const {
-  SlashCommandBuilder,
-  EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("dep")
-    .setDescription(
-      "Starts a deployment poll."
-    )
+    .setDescription("Starts a deployment poll.")
     .addStringOption((option) =>
       option
         .setName("site")
         .setDescription("Area of deployment.")
         .setRequired(true)
     ),
-    
 
   async execute(interaction) {
     await interaction.deferReply({ ephemeral: true });
@@ -24,6 +18,9 @@ module.exports = {
       "1213603754595852358",
       "1183473286856847390",
       "1179524589592784996",
+      "1215866479514484786",
+      "989415856347971636",
+      "1391916683865624577",
     ];
     const member = interaction.member;
 
@@ -36,32 +33,30 @@ module.exports = {
       });
     }
 
-    const timestamp = Math.floor(Date.now() / 1000);
+    const timestamp = Date.now()
+
+    const ping = `<@&989415158549995540>`
 
     const depEmbed = new EmbedBuilder()
       .setTitle("Deployment Session")
       .setColor("#589FFF")
       .setDescription(
         `
-      <:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>\n## The deployment has started. Follow the instructions to join the deploment:\n- Search ${interaction.options.getString("site")} in SCP: Roleplay Custom Server List and join the Site.\n- Join RRT team and say !UNGOC in radio.\n- Send your morph in <#>.\n<:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>
-          ` 
+      <:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>\n## A deployment has started on ${interaction.options.getString("site")}.\n### Follow the instructions to join the deploment:\n- Search ${interaction.options.getString(
+        "site"
+      )} in SCP: Roleplay Custom Server List and join the server.\n- Join any foundation team and say !GLOBAL in radio.\n- Send your morph in <#1355573068499779644>.\n<:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828><:WGOC:1359126547960823899><:BGOC1:1359126543971913828>
+          `
       )
-      .setAuthor(
-        `
-        <t:${timestamp}:f> 
-        `
-      );
+      .setTimestamp(timestamp);
 
-
-    const targetGuildId = "1142991341811408948";
-    const targetChannelId = "1374713476077064222";
+    const targetGuildId = "944748036419108875";
+    const targetChannelId = "989416631170138142";
     try {
       const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
       if (targetGuild) {
         const channel = targetGuild.channels.cache.get(targetChannelId);
         if (channel && channel.isTextBased()) {
-
-          await channel.send({ embeds: [pollEmbed] });
+          await channel.send({content: ping, embeds: [depEmbed] });
         } else {
           console.warn("⚠️ Could not find text channel in the target guild.");
         }

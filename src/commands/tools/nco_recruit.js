@@ -55,7 +55,7 @@ module.exports = {
       if (!Rmember.roles.cache.has('1335749823143346329')) await Rmember.roles.add('1335749823143346329'); 
 
       if (Rmember.roles.cache.has('1183472732055289876')) await Rmember.roles.remove('1183472732055289876'); 
-      if (Rmember.roles.cache.has('1183471903172743198')) await Rmember.roles.remove('1183471903172743198'); 
+      if (Rmember.roles.cache.has('1183471903172743198')) await Rmember .roles.remove('1183471903172743198'); 
 
     } catch (err) {
       console.error("❌ Role modification error:", err);
