@@ -5,7 +5,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-
+const Poll = require(`../../schemas/poll`);
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("dep_poll")
@@ -52,7 +52,20 @@ module.exports = {
       });
     }
 
-    const co = interaction.options.getMember("co-host") || "N/A";
+    const previousPoll = await Poll.findOne().sort({ createdAt: -1 });
+    if (previousPoll) {
+      try {
+        const prevMessage = await channel.messages.fetch(previousPoll.messageId);
+        await prevMessage.delete();
+      } catch (err) {
+        console.warn("Could not delete previous poll message (maybe already deleted).");
+      }
+      await Poll.deleteMany({});
+    }
+
+
+const coMember = interaction.options.getMember("co-host"); // might be null
+const co = coMember ? `<@${coMember.id}>` : "N/A";
 
     const timestamp = Date.now()
 
@@ -75,12 +88,14 @@ module.exports = {
 
     const targetGuildId = "944748036419108875";
     const targetChannelId = "989416631170138142";
+    let message;
+    let channel;
     try {
       const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
       if (targetGuild) {
-        const channel = targetGuild.channels.cache.get(targetChannelId);
+        channel = targetGuild.channels.cache.get(targetChannelId);
         if (channel && channel.isTextBased()) {
-          await channel.send({content: ping, embeds: [pollEmbed] });
+          message = await channel.send({content: ping, embeds: [pollEmbed] });
         } else {
           console.warn("⚠️ Could not find text channel in the target guild.");
         }
@@ -91,8 +106,13 @@ module.exports = {
       console.error("❌ Failed to send message in other guild:", err);
     }
 
+    await Poll.create({
+      messageId: message.id,
+      channelId: message.channel.id,
+      guildId: channel.guild.id,
+    });
     await interaction.editReply({
-      content: `✅ Successfully initiated a deployment poll at <t:${timestamp}:R>.`,
+      content: `✅ Successfully initiated a deployment poll.`,
       ephemeral: true,
     });
   },

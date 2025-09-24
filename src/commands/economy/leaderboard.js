@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const Balance = require("../../schemas/balance"); // assuming your schema is still in schemas/points.js
+const Balance = require("../../schemas/balance");
 
 module.exports = {
   data: new SlashCommandBuilder()

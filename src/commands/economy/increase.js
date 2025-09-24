@@ -18,10 +18,10 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction, client) {
-    // 🔒 Role ID required to use this command
+
     const requiredRoleId = "1349692317174599702"; 
 
-    // Check if the user has the required role
+
     if (!interaction.member.roles.cache.has(requiredRoleId)) {
       return interaction.reply({
         content: "❌ You do not have permission to use this command!",
@@ -29,17 +29,16 @@ module.exports = {
       });
     }
 
-    // Proceed if the user has the role
+
     let amount = interaction.options.getInteger("amount");
     const selectedUser = interaction.options.getUser("target");
 
-    // Fetch balance
     const selectedUserBalance = await client.fetchBalance(
       selectedUser.id,
       interaction.guild.id
     );
 
-    // Ensure balance exists before proceeding
+    
     if (!selectedUserBalance) {
       return interaction.reply({
         content: `Error: Could not fetch balance for ${selectedUser.username}.`,
@@ -47,7 +46,7 @@ module.exports = {
       });
     }
 
-    // Update balance
+    
     await Balance.findOneAndUpdate(
       { _id: selectedUserBalance._id },
       {
@@ -81,7 +80,7 @@ module.exports = {
       console.error("❌ Failed to send message in the guild:", err);
     }
     
-    // Reply to user
+    
     await interaction.reply({
       content: `You've added ${amount} points to ${selectedUser.username}.\nNew points: ${Number(selectedUserBalance.balance) + Number(amount)}`,
       ephemeral: false,
