@@ -25,7 +25,7 @@ module.exports = {
     .addUserOption((option) =>
       option
         .setName("co-host")
-        .setDescription("Co-Host of the deployment. Leave N/A if none.")
+        .setDescription("Co-Host of the deployment. Leave untouched if none.")
         .setRequired(false)
     ),
 

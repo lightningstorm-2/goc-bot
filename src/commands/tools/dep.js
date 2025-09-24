@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("dep")
-    .setDescription("Starts a deployment poll.")
+    .setDescription("Starts a deployment.")
     .addStringOption((option) =>
       option
         .setName("site")
