@@ -47,10 +47,7 @@ module.exports = {
       });
     }
 
-    const rolesToAdd = [
-      "989415158549995540",
-      "1366827323642351727",
-    ];
+    const rolesToAdd = ["989415158549995540", "1366827323642351727"];
     const roleToRemove = "989415105093591080";
 
     try {
@@ -101,30 +98,32 @@ module.exports = {
         .setURL(
           "https://www.roblox.com/communities/13967152/GOC-Global-Occult-Coalition-GOC#!/about"
         )
-        .setEmoji("<:RobloxLogo:1374665973851750441>"),
+        .setEmoji({name: "🎮" }),
+
       new ButtonBuilder()
         .setLabel("Join our Alliance Hub (Council of 108)")
         .setStyle(ButtonStyle.Link)
         .setURL("https://discord.gg/EhXWCmuWsY")
-        .setEmoji("<:C108:1373940048881254502>"),
+        .setEmoji({name: "📜" }),
+
       new ButtonBuilder()
         .setLabel("Join our Foreign Embassy | Appeals Server")
         .setStyle(ButtonStyle.Link)
         .setURL("https://discord.gg/HnktGuvB2d")
-        .setEmoji("<:PSYCHE:1295921161925820516>")
+        .setEmoji({name: "🤝" })
     );
-
     try {
       await target.send({ embeds: [dmEmbed], components: [row] });
-    } catch {
+    } catch (err) {
       await interaction.editReply({
         content: "⚠️ Couldn't send a DM to the user.",
       });
+      console.error("❌ Failed to send DM:", err);
       return;
     }
     const targetGuildId = "1142991341811408948";
     const targetChannelId = "1374713476077064222";
-    const timestamp = Date.now()
+    const timestamp = Date.now();
     try {
       const targetGuild = interaction.client.guilds.cache.get(targetGuildId);
       if (targetGuild) {
